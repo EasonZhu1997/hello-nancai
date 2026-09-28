@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>hello 南财 · AIUI Preview</title>
+  <style>
+    :root {
+      --color-background: #000000;
+      --color-surface: #0a0a0a;
+      --color-text-primary: #ffffff;
+      --color-text-secondary: rgba(255, 255, 255, 0.7);
+      --border-width-default: 2px;
+      --border-color-default: rgba(64, 255, 94, 0.6);
+      --radius-md: 12px;
+      --spacing-md: 12px;
+      --spacing-lg: 24px;
+    }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      background: #111;
+      font-family: Arial, sans-serif;
+    }
+    .frame-label { color: #888; font-size: 14px; }
+    .hint { color: #666; font-size: 12px; }
+    .preview-blank {
+      width: 480px;
+      height: 352px;
+      background: var(--color-background);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .preview-current {
+      width: 448px;
+      height: 150px;
+      background: var(--color-background);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--spacing-md);
+      width: 448px;
+      padding: var(--spacing-lg);
+      box-sizing: border-box;
+      background-color: var(--color-surface);
+      border: var(--border-width-default) solid var(--border-color-default);
+      border-radius: var(--radius-md);
+    }
+    .preview-current .card { width: 416px; padding: 12px; gap: 8px; }
+    .preview-current .title { font-size: 24px; }
+    .preview-current .subtitle { font-size: 13px; }
+    .title { font-size: 32px; font-weight: 700; color: var(--color-text-primary); }
+    .subtitle { font-size: 16px; color: var(--color-text-secondary); }
+    .toggle-btn {
+      margin-top: 8px;
+      padding: 10px 20px;
+      font-size: 16px;
+      color: #ffffff;
+      background-color: rgba(64, 255, 94, 0.15);
+      border: 2px solid rgba(64, 255, 94, 0.6);
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .toggle-btn.pressed {
+      background-color: rgba(64, 255, 94, 0.3);
+      border-color: rgba(64, 255, 94, 1);
+    }
+  </style>
+</head>
+<body>
+  <div class="frame-label">_blank（沉浸式全屏）480 × 352 · 点击按钮或按 Enter 键</div>
+  <div class="preview-blank">
+    <div class="card">
+      <div class="title">hello 南财</div>
+      <div class="subtitle">欢迎使用本智能体</div>
+      <button class="toggle-btn">切换为中文</button>
+    </div>
+  </div>
+
+  <div class="frame-label">_current（内嵌条）448 × 150</div>
+  <div class="preview-current">
+    <div class="card">
+      <div class="title">hello 南财</div>
+      <div class="subtitle">欢迎使用本智能体</div>
+    </div>
+  </div>
+
+  <div class="hint">与 index.ink 同一套交互契约：点击 = bindtap；Enter = onKeyUp 提交；350ms 去重；按下有按压反馈。</div>
+
+  <script>
+    (function () {
+      var isChinese = false;
+      var lastToggleAt = 0;
+
+      var title = document.querySelector('.preview-blank .title');
+      var button = document.querySelector('.preview-blank .toggle-btn');
+
+      function render() {
+        title.textContent = isChinese ? '你好南财' : 'hello 南财';
+        button.textContent = isChinese ? '切换为英文' : '切换为中文';
+      }
+
+      function commitToggle() {
+        var now = Date.now();
+        if (lastToggleAt && now - lastToggleAt < 350) return;
+        lastToggleAt = now;
+        isChinese = !isChinese;
+        render();
+      }
+
+      button.addEventListener('click', commitToggle);
+      button.addEventListener('mousedown', function () { button.classList.add('pressed'); });
+      button.addEventListener('mouseup', function () { button.classList.remove('pressed'); });
+      button.addEventListener('mouseleave', function () { button.classList.remove('pressed'); });
+
+      // 模拟镜腿 / 确认键：keydown 只做按压反馈，keyup 提交（与 onKeyUp 契约一致）
+      document.addEventListener('keydown', function (e) {
+        if (e.code === 'Enter') button.classList.add('pressed');
+      });
+      document.addEventListener('keyup', function (e) {
+        if (e.code === 'Enter') {
+          e.preventDefault();
+          button.classList.remove('pressed');
+          commitToggle();
+        }
+      });
+
+      render();
+    })();
+  </script>
+</body>
+</html>

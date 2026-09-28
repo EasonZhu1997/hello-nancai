@@ -1,0 +1,7 @@
+# 会话与系统文件，不入库
+.workbuddy/
+.DS_Store
+*.log
+node_modules/
+
+# 真实密钥永远不要提交：如需本地覆盖 Key，可复制 lib/config.js 为私有文件并自行引入

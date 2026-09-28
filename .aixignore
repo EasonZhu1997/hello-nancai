@@ -1,0 +1,8 @@
+# AIX packaging guard — keep these out of the shipped archive
+node_modules/
+.aixignore
+*.log
+preview.html
+test/
+scripts/
+docs/

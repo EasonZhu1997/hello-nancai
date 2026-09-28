@@ -1,0 +1,13 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/chat/index"
+  ],
+  "permissions": [],
+  "window": {
+    "navigationBarTitleText": "hello 南财",
+    "viewport": {
+      "width": "device-width"
+    }
+  }
+}
